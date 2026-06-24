@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: municipal-service
+  namespace: municipal
+
+spec:
+  selector:
+    app: municipal-app
+
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+
+  type: ClusterIP

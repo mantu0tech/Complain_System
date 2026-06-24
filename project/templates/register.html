@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CityCare - Register</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background-color: #f9f9f9;
+        color: #333;
+    }
+
+    /* HEADER */
+    header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 40px;
+        background-color: white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .logo-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 22px;
+        font-weight: 600;
+        color: #1E3A8A;
+    }
+
+    nav a {
+        margin: 0 15px;
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+    }
+
+    nav a:hover {
+        color: #1E90FF;
+    }
+
+    .btn {
+        padding: 8px 15px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        color: white;
+        transition: transform 0.2s, filter 0.2s;
+    }
+
+    .btn-blue { background-color: #1E90FF; }
+    .btn-green { background-color: #28A745; }
+
+    .btn:hover {
+        transform: scale(1.05);
+        filter: brightness(1.1);
+    }
+
+    /* HERO SECTION */
+    .hero {
+        position: relative;
+        background: url('https://images.unsplash.com/photo-1556484687-30636164638b') no-repeat center/cover;
+        height: 50vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        color: white;
+        max-width: 800px;
+    }
+
+    .hero-content h1 {
+        font-size: 32px;
+        font-weight: 700;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+    }
+
+    .hero-content p {
+        font-size: 16px;
+        margin: 10px 0;
+    }
+
+    /* REGISTRATION FORM */
+    .register-section {
+        padding: 30px 10%;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        margin-top: -50px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .register-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: start;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .register-info {
+        text-align: left;
+    }
+
+    .register-info h2 {
+        color: #1E3A8A;
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .register-info p {
+        color: #6c757d;
+        font-size: 15px;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .benefits {
+        list-style: none;
+    }
+
+    .benefits li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        color: #495057;
+        font-size: 14px;
+    }
+
+    .benefits li i {
+        color: #28A745;
+        margin-right: 8px;
+        font-size: 16px;
+    }
+
+    .register-form {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .form-title {
+        text-align: center;
+        color: #1E3A8A;
+        margin-bottom: 25px;
+        font-size: 22px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #495057;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #1E90FF;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #1E90FF, #1E3A8A);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 144, 255, 0.4);
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 15px;
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    .login-link a {
+        color: #1E90FF;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 768px) {
+        .register-container {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        header {
+            padding: 15px 20px;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .hero {
+            height: 40vh;
+        }
+
+        .hero-content h1 {
+            font-size: 24px;
+        }
+
+        .register-section {
+            padding: 20px 5%;
+            margin-top: -30px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo-title">
+        <i class="fas fa-city"></i> Municipal Complaint Portal
+    </div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="index.html#about">About Us</a>
+        <a href="index.html#how">How It Works</a>
+        <a href="index.html#contact">Contact Us</a>
+        <a href="login.html" class="btn btn-blue">Login</a>
+        <a href="rege.html" class="btn btn-green">Register</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Join Our Community</h1>
+        <p>Create your account today and start making a difference</p>
+    </div>
+</section>
+
+<section class="register-section">
+    <div class="register-container">
+        <div class="register-info">
+            <h2>Why Register with CityCare?</h2>
+            <p>Join thousands of citizens actively participating in making their city better. Our platform empowers you to report issues, track progress, and collaborate with local authorities.</p>
+            
+            <ul class="benefits">
+                <li><i class="fas fa-check-circle"></i> Report issues instantly with photos</li>
+                <li><i class="fas fa-check-circle"></i> Track complaints in real-time</li>
+                <li><i class="fas fa-check-circle"></i> Get notified when issues are resolved</li>
+                <li><i class="fas fa-check-circle"></i> Connect with other citizens</li>
+                <li><i class="fas fa-check-circle"></i> Access detailed analytics</li>
+            </ul>
+        </div>
+        
+        <div class="register-form">
+            <h3 class="form-title">Create Your Account</h3>
+           <form action="{{ url_for('register') }}" method="POST" enctype="multipart/form-data">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="first_name" required>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="last_name" required>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" required>
+    </div>
+
+    <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" id="address" name="address" required>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirm_password" required>
+        </div>
+    </div>
+
+    <button type="submit" class="submit-btn">
+        <i class="fas fa-user-plus"></i> Create Account
+    </button>
+</form>
+        </div>
+    </div>
+</section>
+
+<footer id="contact">
+    <div>
+        <p>Email: support@municipalportal.com</p>
+        <p>Phone: +91 9876543210</p>
+        <p>Address: Municipal Office, City Center</p>
+    </div>
+    <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms & Conditions</a>
+        <div class="social-icons">
+            <i class="fab fa-facebook"></i>
+            <i class="fab fa-twitter"></i>
+            <i class="fab fa-instagram"></i>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

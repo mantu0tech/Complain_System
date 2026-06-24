@@ -1,0 +1,97 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = "ap-south-1"
+        AWS_ACCOUNT_ID = "519120506792"
+        ECR_REPO = "finalimage"
+
+        IMAGE_TAG = "${BUILD_NUMBER}"
+
+        ECR_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}"
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'master',
+                url: 'https://github.com/AlokSingh-dotcom/municipal_complaint.git'
+            }
+        }
+
+        stage('Verify Tools') {
+            steps {
+                sh '''
+                docker --version
+                aws --version
+                kubectl version --client
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                docker build \
+                -t ${ECR_REPO}:${IMAGE_TAG} \
+                -f ai-municipal-complaint-system/project/Dockerfile \
+                ai-municipal-complaint-system/project
+                '''
+            }
+        }
+
+        stage('Login To ECR') {
+            steps {
+                sh '''
+                aws ecr get-login-password --region ${AWS_REGION} | \
+                docker login \
+                --username AWS \
+                --password-stdin \
+                ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                '''
+            }
+        }
+
+        stage('Tag Image') {
+            steps {
+                sh '''
+                docker tag \
+                ${ECR_REPO}:${IMAGE_TAG} \
+                ${ECR_URI}:${IMAGE_TAG}
+                '''
+            }
+        }
+
+        stage('Push Image To ECR') {
+            steps {
+                sh '''
+                docker push ${ECR_URI}:${IMAGE_TAG}
+                '''
+            }
+        }
+
+        stage('Deploy To EKS') {
+            steps {
+                sh '''
+                kubectl set image deployment/municipal-app \
+                municipal-app=${ECR_URI}:${IMAGE_TAG} \
+                -n municipal
+
+                kubectl rollout status deployment/municipal-app \
+                -n municipal
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment Successful '
+        }
+
+        failure {
+            echo 'Deployment Failed '
+        }
+    }
+}

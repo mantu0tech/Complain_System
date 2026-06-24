@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CityCare — Staff Login</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome (icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+  /* ========== INLINE CSS ========== */
+
+  * { box-sizing: border-box; margin:0; padding:0; font-family: 'Poppins', sans-serif; }
+  :root{
+    --primary: #1E3A8A;
+    --accent:  #1E90FF;
+    --muted:   #6b7280;
+    --bg:      #f9f9fb;
+    --card:    #ffffff;
+    --text:    #222;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger:  #dc3545;
+    --shadow:  rgba(16,24,40,0.06);
+    --glass:   rgba(30,58,138,0.06);
+    --radius: 12px;
+  }
+
+  html,body{ height:100%; background:var(--bg); color:var(--text); display:flex; align-items:center; justify-content:center; }
+
+  .login-container{ background:var(--card); border-radius:16px; padding:32px; box-shadow: 0 12px 32px var(--shadow); width:100%; max-width:400px; text-align:center; }
+  .login-container h1{ font-size:1.8rem; color:var(--primary); margin-bottom:8px; }
+  .login-container p{ color:var(--muted); margin-bottom:24px; }
+
+  .form-group{ margin-bottom:16px; text-align:left; }
+  .form-group label{ display:block; font-weight:600; margin-bottom:6px; color:var(--text); }
+  .form-group input{ width:100%; padding:12px 14px; border:1px solid #e5e7eb; border-radius:8px; font-size:1rem; transition: border-color .2s; }
+  .form-group input:focus{ outline:none; border-color:var(--primary); box-shadow: 0 0 0 3px rgba(30,58,138,0.1); }
+
+  .btn{ background:var(--primary); color:#fff; padding:12px 20px; border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer; width:100%; transition: background .2s; }
+  .btn:hover{ background: #1e40af; }
+
+  .alert{ padding:10px; border-radius:6px; margin-bottom:16px; font-size:0.95rem; }
+  .alert-danger{ background:#fee2e2; color:#dc2626; border:1px solid #fecaca; }
+  .alert-success{ background:#d1fae5; color:#059669; border:1px solid #a7f3d0; }
+  .alert-warning{ background:#fef3c7; color:#d97706; border:1px solid #fde68a; }
+
+  .footer{ margin-top:20px; color:var(--muted); font-size:0.9rem; }
+  .footer a{ color:var(--primary); text-decoration:none; }
+  .footer a:hover{ text-decoration:underline; }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h1>Staff Login</h1>
+    <p>Access your staff dashboard</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ 'danger' if category == 'danger' else 'success' if category == 'success' else 'warning' }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn">Login</button>
+    </form>
+
+    <div class="footer">
+      <a href="{{ url_for('home') }}">← Back to Home</a>
+    </div>
+  </div>
+
+</body>
+</html>

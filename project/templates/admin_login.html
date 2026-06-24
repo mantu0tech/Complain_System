@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CityCare — Admin Login</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome (icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+  * { box-sizing: border-box; margin:0; padding:0; font-family: 'Poppins', sans-serif; }
+  :root{
+    --primary: #1E3A8A;
+    --accent:  #1E90FF;
+    --muted:   #6b7280;
+    --bg:      #f9f9fb;
+    --card:    #ffffff;
+    --text:    #222;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger:  #dc3545;
+    --shadow:  rgba(16,24,40,0.06);
+    --glass:   rgba(30,58,138,0.06);
+    --radius: 12px;
+  }
+
+  html,body{ height:100%; background:var(--bg); color:var(--text); display:flex; align-items:center; justify-content:center; }
+
+  .login-container{ background:var(--card); border-radius:var(--radius); padding:40px; box-shadow: 0 10px 30px var(--shadow); width:100%; max-width:400px; text-align:center; }
+  .login-container h1{ font-size:1.8rem; color:var(--primary); margin-bottom:20px; }
+  .login-container .logo{ width:80px; height:80px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 20px; }
+
+  .form-group{ margin-bottom:20px; text-align:left; }
+  .form-group label{ display:block; margin-bottom:5px; font-weight:600; color:var(--text); }
+  .form-group input{ width:100%; padding:12px; border:1px solid #e6e9ee; border-radius:8px; font-size:1rem; }
+
+  .btn{ background:var(--primary); color:#fff; padding:12px 20px; border:none; border-radius:8px; cursor:pointer; font-size:1rem; width:100%; }
+  .btn:hover{ background: var(--accent); }
+
+  .alert{ padding:10px; border-radius:8px; margin-bottom:20px; }
+  .alert-danger{ background:#fee; color:var(--danger); border:1px solid var(--danger); }
+  .alert-success{ background:#efe; color:var(--success); border:1px solid var(--success); }
+
+  .staff-link{ margin-top:20px; }
+  .staff-link a{ color:var(--primary); text-decoration:none; font-weight:600; }
+  .staff-link a:hover{ text-decoration:underline; }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="logo"><i class="fa fa-shield-alt"></i></div>
+    <h1>Admin Login</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ 'danger' if category == 'danger' else 'success' }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn">Login</button>
+    </form>
+
+    <div class="staff-link">
+      <a href="{{ url_for('staff_login') }}">Staff Login</a>
+    </div>
+  </div>
+
+</body>
+</html>

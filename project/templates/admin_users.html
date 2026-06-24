@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CityCare — Admin Users</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome (icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+  /* ========== INLINE CSS ========== */
+
+  * { box-sizing: border-box; margin:0; padding:0; font-family: 'Poppins', sans-serif; }
+  :root{
+    --primary: #1E3A8A;
+    --accent:  #1E90FF;
+    --muted:   #6b7280;
+    --bg:      #f9f9fb;
+    --card:    #ffffff;
+    --text:    #222;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger:  #dc3545;
+    --shadow:  rgba(16,24,40,0.06);
+    --glass:   rgba(30,58,138,0.06);
+    --radius: 12px;
+  }
+
+  html,body{ height:100%; background:var(--bg); color:var(--text); }
+
+/* ---------- Sidebar ---------- */
+  .sidebar{
+    position: fixed; left:0; top:0; bottom:0; width:220px;
+    background: var(--primary); color:#fff; padding:18px 14px; display:flex; flex-direction:column; gap:14px;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.06);
+    transition: width .18s ease;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand-logo{ width:40px; height:40px; border-radius:8px; object-fit:cover; background:#fff2; display:inline-block; }
+  .brand-text{ font-weight:600; font-size:1.05rem; letter-spacing:0.2px; }
+  .collapse-btn{ margin-left:auto; background:transparent; border:none; color:#fff; cursor:pointer; display:flex; align-items:center; }
+
+/* menu */
+  .menu ul{ list-style:none; margin-top:6px; padding:6px 2px; }
+  .menu li{ display:flex; gap:12px; align-items:center; padding:10px 12px; border-radius:10px; cursor:pointer; color: #e6eefc; transition: background .18s, transform .12s; }
+  .menu li i{ width:20px; text-align:center; }
+  .menu li .menu-text{ font-weight:500; font-size:0.95rem; }
+  .menu li:hover{ background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+  .menu li.active{ background: rgba(255,255,255,0.085); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02); }
+
+/* ---------- Page wrapper & Topbar ---------- */
+  .page{ margin-left:220px; min-height:100vh; display:flex; flex-direction:column; transition: margin-left .18s ease; }
+  .topbar{ height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 20px; background: #fff; box-shadow: 0 2px 6px var(--shadow); z-index:5; }
+  .topbar-left{ display:flex; align-items:center; gap:16px; }
+  .page-title{ font-size:1.05rem; color:var(--text); }
+  .mobile-menu-btn{ display:none; background:transparent; border:none; font-size:18px; cursor:pointer; }
+
+/* profile */
+  .topbar-right{ display:flex; align-items:center; gap:12px; }
+  .icon-btn{ background:transparent; border:none; font-size:16px; padding:8px; cursor:pointer; border-radius:8px; color:var(--muted); }
+  .profile{ display:flex; align-items:center; gap:10px; background:#f3f4f6; padding:6px 8px; border-radius:10px; }
+  .profile-pic{ width:40px; height:40px; border-radius:8px; object-fit:cover; }
+  .profile-name{ font-weight:600; font-size:0.95rem; }
+  .profile-role{ font-size:0.78rem; color:var(--muted); }
+
+/* ---------- Main content ---------- */
+  .main-content{ padding:22px; padding-top:28px; background: transparent; min-height: calc(100vh - 64px); }
+
+/* table */
+  .table-wrap{ background:var(--card); border-radius:12px; padding:16px; box-shadow: 0 6px 18px var(--shadow); overflow:hidden; }
+  .table-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .table-header h2{ font-size:1.05rem; color:var(--text); }
+  .table-actions .btn{ background:var(--primary); color:#fff; padding:8px 12px; border-radius:8px; border:none; cursor:pointer; }
+
+/* scrollable table */
+  .table-scroll{ overflow:auto; max-width:100%; }
+  .complaints-table{ width:100%; border-collapse:collapse; min-width:900px; }
+  .complaints-table th, .complaints-table td{ padding:12px 14px; text-align:left; border-bottom:1px solid #f1f1f3; font-size:0.95rem; }
+  .complaints-table thead th{ background:transparent; color:var(--muted); font-weight:600; }
+
+/* footer */
+  .footer{ margin-top:18px; text-align:center; color:var(--muted); padding:14px 0; font-size:0.9rem; }
+
+/* responsive */
+  @media (max-width: 1200px){ .cards{ grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 992px){ .cards{ grid-template-columns: repeat(2, 1fr); } .mobile-menu-btn{ display:inline-flex; } }
+  @media (max-width: 768px){
+    .page{ margin-left:0; }
+    .sidebar{ position:fixed; transform:translateX(-120%); transition:transform .22s ease; z-index:60; width:200px; }
+    .sidebar.open{ transform:translateX(0); }
+    .topbar{ position:sticky; top:0; z-index:50; }
+    .table-wrap{ padding:12px; }
+    .brand-text{ display:none; }
+    .collapse-btn{ display:none; }
+  }
+
+/* collapsed state (desktop) */
+  body.sidebar-collapsed .sidebar{ width:72px; }
+  body.sidebar-collapsed .page{ margin-left:72px; }
+  body.sidebar-collapsed .menu-text, body.sidebar-collapsed .brand-text{ display:none; }
+
+  </style>
+</head>
+<body>
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo"></div>
+      <span class="brand-text">CityCare</span>
+      <button id="sidebarToggle" class="collapse-btn" aria-label="Toggle sidebar"><i class="fa fa-chevron-left"></i></button>
+    </div>
+
+    <nav class="menu">
+      <ul>
+        <li><a href="{{ url_for('admin') }}" style="color: inherit; text-decoration: none;"><i class="fa fa-home"></i><span class="menu-text">Dashboard</span></a></li>
+        <li class="active"><i class="fa fa-users"></i><span class="menu-text">Users</span></li>
+        <li><a href="{{ url_for('admin_complaints') }}" style="color: inherit; text-decoration: none;"><i class="fa fa-clipboard-list"></i><span class="menu-text">Complaints</span></a></li>
+        <li><a href="{{ url_for('admin_logout') }}" style="color: inherit; text-decoration: none;"><i class="fa fa-sign-out-alt"></i><span class="menu-text">Admin Logout</span></a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- ========== PAGE WRAPPER ========== -->
+  <div class="page">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Open menu"><i class="fa fa-bars"></i></button>
+        <h1 class="page-title">Admin Users</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" title="Notifications"><i class="fa fa-bell"></i></button>
+        <div class="profile">
+          <img src="https://via.placeholder.com/40x40?text=U" alt="Admin" class="profile-pic">
+          <div class="profile-info">
+            <div class="profile-name">Admin Panel</div>
+            <div class="profile-role">Super Admin</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="main-content">
+
+      <!-- Users Table -->
+      <section class="table-wrap">
+        <div class="table-header">
+          <h2>All Users</h2>
+        </div>
+
+        <div class="table-scroll">
+          <table class="complaints-table">
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Profile Pic</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if users %}
+                {% for u in users %}
+                <tr>
+                  <td>{{ u.id }}</td>
+                  <td>{{ u.first_name }} {{ u.last_name }}</td>
+                  <td>{{ u.email }}</td>
+                  <td>{{ u.phone or 'N/A' }}</td>
+                  <td>{{ u.address or 'N/A' }}</td>
+                  <td>
+                    {% if u.profile_pic %}
+                      <img src="{{ url_for('static', filename='uploads/' + u.profile_pic) }}" alt="Profile" style="width:40px; height:40px; border-radius:50%;">
+                    {% else %}
+                      <i class="fa fa-user-circle" style="font-size:40px; color:#ccc;"></i>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="6">No users found.</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="footer">
+        © 2025 CityCare Admin Panel | Developed by Om Jadhav
+      </footer>
+    </main>
+  </div>
+
+  <!-- ========== INLINE JS ========== -->
+  <script>
+  // sidebar mobile toggle
+  const sidebar = document.getElementById('sidebar');
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
+  }
+
+  // collapse toggle (desktop)
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  sidebarToggle && sidebarToggle.addEventListener('click', () => {
+    document.body.classList.toggle('sidebar-collapsed');
+    if (document.body.classList.contains('sidebar-collapsed')) {
+      sidebar.style.width = '72px';
+      document.querySelector('.page').style.marginLeft = '72px';
+      document.querySelectorAll('.menu-text, .brand-text').forEach(el => el.style.display = 'none');
+    } else {
+      sidebar.style.width = '220px';
+      document.querySelector('.page').style.marginLeft = '220px';
+      document.querySelectorAll('.menu-text, .brand-text').forEach(el => el.style.display = '');
+    }
+  });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Complaints</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        .status-pending { color: orange; }
+        .status-resolved { color: green; }
+        .status-in-progress { color: blue; }
+        .priority-high { color: red; font-weight: bold; }
+        .priority-medium { color: orange; }
+        .priority-low { color: green; }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Complaints</h2>
+        <a href="{{ url_for('citizen_dash') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+
+    {% if complaints %}
+    <div class="row">
+        {% for complaint in complaints %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="card-title">#{{ complaint.id }} - {{ complaint.category }}</h5>
+                    <span class="badge bg-{{ 'warning' if complaint.status == 'Pending' else 'success' if complaint.status == 'Resolved' else 'info' }}">
+                        {{ complaint.status }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Description:</strong> {{ complaint.description }}</p>
+                    <p class="card-text"><strong>Location:</strong> {{ complaint.location }}</p>
+                    <p class="card-text"><strong>Priority:</strong>
+                        <span class="priority-{{ complaint.priority.lower() }}">{{ complaint.priority }}</span>
+                    </p>
+                    <p class="card-text"><strong>Submitted:</strong> {{ complaint.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                    {% if complaint.notes %}
+                    <p class="card-text"><strong>Staff Notes:</strong> {{ complaint.notes }}</p>
+                    {% endif %}
+                    {% if complaint.image %}
+                    <div class="mb-3">
+    <strong>Complaint Image:</strong><br>
+    <img src="{{ complaint.image }}"
+         alt="Complaint Image"
+         class="img-fluid rounded mt-2"s
+         style="max-width: 300px; max-height: 300px;">
+</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center">
+        <p class="lead">You haven't submitted any complaints yet.</p>
+        <a href="{{ url_for('submit_complaint') }}" class="btn btn-primary">Submit Your First Complaint</a>
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>

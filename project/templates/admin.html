@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CityCare — Admin Panel</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome (icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+  /* ========== INLINE CSS ========== */
+
+  * { box-sizing: border-box; margin:0; padding:0; font-family: 'Poppins', sans-serif; }
+  :root{
+    --primary: #1E3A8A;
+    --accent:  #1E90FF;
+    --muted:   #6b7280;
+    --bg:      #f9f9fb;
+    --card:    #ffffff;
+    --text:    #222;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger:  #dc3545;
+    --shadow:  rgba(16,24,40,0.06);
+    --glass:   rgba(30,58,138,0.06);
+    --radius: 12px;
+  }
+
+  html,body{ height:100%; background:var(--bg); color:var(--text); }
+
+/* ---------- Sidebar ---------- */
+  .sidebar{
+    position: fixed; left:0; top:0; bottom:0; width:220px;
+    background: var(--primary); color:#fff; padding:18px 14px; display:flex; flex-direction:column; gap:14px;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.06);
+    transition: width .18s ease;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand-logo{ width:40px; height:40px; border-radius:8px; object-fit:cover; background:#fff2; display:inline-block; }
+  .brand-text{ font-weight:600; font-size:1.05rem; letter-spacing:0.2px; }
+  .collapse-btn{ margin-left:auto; background:transparent; border:none; color:#fff; cursor:pointer; display:flex; align-items:center; }
+
+/* menu */
+  .menu ul{ list-style:none; margin-top:6px; padding:6px 2px; }
+  .menu li{ display:flex; gap:12px; align-items:center; padding:10px 12px; border-radius:10px; cursor:pointer; color: #e6eefc; transition: background .18s, transform .12s; }
+  .menu li i{ width:20px; text-align:center; }
+  .menu li .menu-text{ font-weight:500; font-size:0.95rem; }
+  .menu li:hover{ background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+  .menu li.active{ background: rgba(255,255,255,0.085); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02); }
+
+/* ---------- Page wrapper & Topbar ---------- */
+  .page{ margin-left:220px; min-height:100vh; display:flex; flex-direction:column; transition: margin-left .18s ease; }
+  .topbar{ height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 20px; background: #fff; box-shadow: 0 2px 6px var(--shadow); z-index:5; }
+  .topbar-left{ display:flex; align-items:center; gap:16px; }
+  .page-title{ font-size:1.05rem; color:var(--text); }
+  .mobile-menu-btn{ display:none; background:transparent; border:none; font-size:18px; cursor:pointer; }
+
+/* profile */
+  .topbar-right{ display:flex; align-items:center; gap:12px; }
+  .icon-btn{ background:transparent; border:none; font-size:16px; padding:8px; cursor:pointer; border-radius:8px; color:var(--muted); }
+  .profile{ display:flex; align-items:center; gap:10px; background:#f3f4f6; padding:6px 8px; border-radius:10px; }
+  .profile-pic{ width:40px; height:40px; border-radius:8px; object-fit:cover; }
+  .profile-name{ font-weight:600; font-size:0.95rem; }
+  .profile-role{ font-size:0.78rem; color:var(--muted); }
+
+/* ---------- Main content ---------- */
+  .main-content{ padding:22px; padding-top:28px; background: transparent; min-height: calc(100vh - 64px); }
+
+/* cards */
+  .cards{ display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:18px; margin-bottom:18px; }
+  .card{ background:var(--card); border-radius:var(--radius); padding:18px; box-shadow: 0 6px 18px var(--shadow); display:flex; flex-direction:column; gap:10px; align-items:flex-start; }
+  .card-icon{ font-size:22px; color:var(--accent); background: var(--glass); padding:10px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; }
+  .card-title{ font-weight:600; color:var(--muted); font-size:0.95rem; }
+  .card-value{ font-size:1.6rem; font-weight:700; color:var(--primary); margin-top:4px; }
+
+/* accents */
+  .card.blue{ border-top:4px solid #1E90FF; }
+  .card.orange{ border-top:4px solid #FFC107; }
+  .card.green{ border-top:4px solid #28A745; }
+  .card.red{ border-top:4px solid #DC3545; }
+  .card.purple{ border-top:4px solid #8B5CF6; }
+  .card.yellow{ border-top:4px solid #F59E0B; }
+
+/* table */
+  .table-wrap{ background:var(--card); border-radius:12px; padding:16px; box-shadow: 0 6px 18px var(--shadow); overflow:hidden; }
+  .table-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .table-header h2{ font-size:1.05rem; color:var(--text); }
+  .table-actions .btn{ background:var(--primary); color:#fff; padding:8px 12px; border-radius:8px; border:none; cursor:pointer; }
+
+/* scrollable table */
+  .table-scroll{ overflow:auto; max-width:100%; }
+  .complaints-table{ width:100%; border-collapse:collapse; min-width:900px; }
+  .complaints-table th, .complaints-table td{ padding:12px 14px; text-align:left; border-bottom:1px solid #f1f1f3; font-size:0.95rem; }
+  .complaints-table thead th{ background:transparent; color:var(--muted); font-weight:600; }
+
+/* badges */
+  .badge{ display:inline-block; padding:6px 10px; border-radius:999px; font-size:0.82rem; color:#fff; font-weight:600; }
+  .status.pending{ background: var(--danger); }      /* red -> pending */
+  .status.progress{ background: var(--warning); color:#111; }
+  .status.resolved{ background: var(--success); color:#fff; }
+
+  .priority.high{ background: #ff6b6b; }
+  .priority.medium{ background: #f59e0b; color:#111; }
+  .priority.low{ background: #60a5fa; }
+
+/* action icons */
+  .icon{ background:transparent; border:none; cursor:pointer; padding:6px; border-radius:8px; margin-right:4px; }
+  .icon.small{ font-size:14px; color:var(--muted); }
+  .icon.small.danger{ color:var(--danger); }
+
+/* footer */
+  .footer{ margin-top:18px; text-align:center; color:var(--muted); padding:14px 0; font-size:0.9rem; }
+
+/* modal */
+  .modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(2,6,23,0.45); z-index:40; }
+  .modal[aria-hidden="false"]{ display:flex; }
+  .modal-dialog{ width:100%; max-width:520px; background:var(--card); border-radius:10px; box-shadow:0 10px 30px rgba(2,6,23,0.2); overflow:hidden; }
+  .modal-header{ padding:14px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #f1f1f3; }
+  .modal-body{ padding:18px; display:flex; flex-direction:column; gap:8px; }
+  .modal-footer{ padding:12px 16px; display:flex; gap:8px; justify-content:flex-end; border-top:1px solid #f1f1f3; }
+  .modal-close{ background:transparent; border:none; font-size:16px; cursor:pointer; color:var(--muted); }
+
+/* selects */
+  select{ padding:8px 10px; border-radius:8px; border:1px solid #e6e9ee; font-size:0.95rem; }
+
+/* responsive */
+  @media (max-width: 1200px){ .cards{ grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 992px){ .cards{ grid-template-columns: repeat(2, 1fr); } .mobile-menu-btn{ display:inline-flex; } }
+  @media (max-width: 768px){
+    .page{ margin-left:0; }
+    .sidebar{ position:fixed; transform:translateX(-120%); transition:transform .22s ease; z-index:60; width:200px; }
+    .sidebar.open{ transform:translateX(0); }
+    .topbar{ position:sticky; top:0; z-index:50; }
+    .cards{ grid-template-columns: 1fr; }
+    .table-wrap{ padding:12px; }
+    .brand-text{ display:none; }
+    .collapse-btn{ display:none; }
+  }
+
+/* collapsed state (desktop) */
+  body.sidebar-collapsed .sidebar{ width:72px; }
+  body.sidebar-collapsed .page{ margin-left:72px; }
+  body.sidebar-collapsed .menu-text, body.sidebar-collapsed .brand-text{ display:none; }
+
+  </style>
+</head>
+<body>
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo"></div>
+      <span class="brand-text">CityCare</span>
+      <button id="sidebarToggle" class="collapse-btn" aria-label="Toggle sidebar"><i class="fa fa-chevron-left"></i></button>
+    </div>
+
+    <nav class="menu">
+      <ul>
+        <li class="active"><i class="fa fa-home"></i><span class="menu-text">Dashboard</span></li>
+        <li><a href="{{ url_for('admin_users') }}" style="color: inherit; text-decoration: none;"><i class="fa fa-users"></i><span class="menu-text">Users</span></a></li>
+        <li><a href="{{ url_for('admin_complaints') }}" style="color: inherit; text-decoration: none;"><i class="fa fa-clipboard-list"></i><span class="menu-text">Complaints</span></a></li>
+        <li><a href="{{ url_for('admin_logout') }}" style="color: inherit; text-decoration: none;"><i class="fa fa-sign-out-alt"></i><span class="menu-text">Admin Logout</span></a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- ========== PAGE WRAPPER ========== -->
+  <div class="page">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Open menu"><i class="fa fa-bars"></i></button>
+        <h1 class="page-title">Admin Dashboard</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" title="Notifications"><i class="fa fa-bell"></i></button>
+        <div class="profile">
+          <img src="https://via.placeholder.com/40x40?text=U" alt="Admin" class="profile-pic">
+          <div class="profile-info">
+            <div class="profile-name">Admin Panel</div>
+            <div class="profile-role">Super Admin</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="main-content">
+
+      <!-- Overview cards -->
+      <section class="cards">
+        <div class="card blue">
+          <div class="card-icon"><i class="fa fa-users"></i></div>
+          <div class="card-title">Total Users</div>
+          <div class="card-value" data-target="{{ users_count or 0 }}">0</div>
+        </div>
+
+        <div class="card orange">
+          <div class="card-icon"><i class="fa fa-clipboard"></i></div>
+          <div class="card-title">Total Complaints</div>
+          <div class="card-value" data-target="{{ total_complaints or 0 }}">0</div>
+        </div>
+
+        <div class="card green">
+          <div class="card-icon"><i class="fa fa-check-circle"></i></div>
+          <div class="card-title">Resolved</div>
+          <div class="card-value" data-target="{{ resolved or 0 }}">0</div>
+        </div>
+
+        <div class="card red">
+          <div class="card-icon"><i class="fa fa-hourglass-half"></i></div>
+          <div class="card-title">Pending</div>
+          <div class="card-value" data-target="{{ pending or 0 }}">0</div>
+        </div>
+
+        <div class="card purple">
+          <div class="card-icon"><i class="fa fa-exclamation-triangle"></i></div>
+          <div class="card-title">High Priority</div>
+          <div class="card-value" data-target="{{ high_priority or 0 }}">0</div>
+        </div>
+
+        <div class="card yellow">
+          <div class="card-icon"><i class="fa fa-spinner"></i></div>
+          <div class="card-title">In Progress</div>
+          <div class="card-value" data-target="{{ in_progress or 0 }}">0</div>
+        </div>
+      </section>
+
+      <!-- High Priority Complaints Section -->
+      {% if high_priority_complaints %}
+      <section class="table-wrap">
+        <div class="table-header">
+          <h2>High Priority Complaints</h2>
+        </div>
+        <div class="table-scroll">
+          <table class="complaints-table">
+            <thead>
+              <tr>
+                <th>Complaint ID</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Date</th>
+                <th>User</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for c in high_priority_complaints %}
+              <tr>
+                <td>{{ c.id }}</td>
+                <td>{{ c.title }}</td>
+                <td>{{ c.category }}</td>
+                <td><span class="status badge {{ c.status|lower }}">{{ c.status }}</span></td>
+                <td><span class="priority badge {{ c.priority|lower }}">{{ c.priority }}</span></td>
+                <td>{{ c.created_at.strftime('%d-%b-%Y') }}</td>
+                <td>{{ c.user.first_name }} {{ c.user.last_name }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      {% endif %}
+
+      <footer class="footer">
+        © 2025 CityCare Admin Panel | Developed by Om Jadhav
+      </footer>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div id="updateModal" class="modal" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-header">
+        <h3 id="modalTitle">Update Complaint</h3>
+        <button class="modal-close" aria-label="Close" onclick="closeModal()"><i class="fa fa-times"></i></button>
+      </header>
+      <div class="modal-body">
+        <p id="modalComplaintTitle" style="margin-bottom:12px; font-weight:600;"></p>
+
+        <label for="statusSelect">Change Status</label>
+        <select id="statusSelect">
+          <option value="pending">Pending</option>
+          <option value="progress">In Progress</option>
+          <option value="resolved">Resolved</option>
+        </select>
+
+        <label for="prioritySelect" style="margin-top:12px;">Priority</label>
+        <select id="prioritySelect">
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+      <footer class="modal-footer">
+        <button class="btn" onclick="saveChanges()">Save Changes</button>
+        <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ========== INLINE JS ========== -->
+  <script>
+  // animated counters
+  document.addEventListener('DOMContentLoaded', () => {
+    const counters = document.querySelectorAll('.card-value');
+    counters.forEach(counter => {
+      const target = +counter.dataset.target || 0;
+      let count = 0;
+      const duration = 900;
+      if (target === 0) { counter.textContent = "0"; return; }
+      const step = Math.max(1, Math.floor(target / (duration / 16)));
+      const timer = setInterval(() => {
+        count += step;
+        if (count >= target) { counter.textContent = target; clearInterval(timer); }
+        else counter.textContent = count;
+      }, 16);
+    });
+  });
+
+  // modal logic
+  const modal = document.getElementById('updateModal');
+  const modalTitleEl = document.getElementById('modalTitle');
+  const modalComplaintTitle = document.getElementById('modalComplaintTitle');
+  let activeComplaintId = null;
+
+  function openUpdateModal(button) {
+    const id = button.getAttribute('data-id');
+    const title = button.getAttribute('data-title');
+    activeComplaintId = id;
+    modalTitleEl.textContent = `Update ${id}`;
+    modalComplaintTitle.textContent = title;
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModal() {
+    modal.setAttribute('aria-hidden', 'true');
+    activeComplaintId = null;
+  }
+
+  async function saveChanges() {
+    const status = document.getElementById('statusSelect').value;
+    const priority = document.getElementById('prioritySelect').value;
+
+    const formData = new FormData();
+    formData.append('status', status);
+    formData.append('priority', priority);
+
+    try {
+      const response = await fetch(`/update_complaint/${activeComplaintId}`, {
+        method: 'POST',
+        body: formData
+      });
+      if (response.ok) {
+        alert('Complaint updated successfully!');
+        location.reload();
+      } else {
+        alert('Failed to update complaint.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred.');
+    }
+
+    closeModal();
+  }
+
+  window.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+  // sidebar mobile toggle
+  const sidebar = document.getElementById('sidebar');
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
+  }
+
+  // collapse toggle (desktop)
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  sidebarToggle && sidebarToggle.addEventListener('click', () => {
+    document.body.classList.toggle('sidebar-collapsed');
+    if (document.body.classList.contains('sidebar-collapsed')) {
+      sidebar.style.width = '72px';
+      document.querySelector('.page').style.marginLeft = '72px';
+      document.querySelectorAll('.menu-text, .brand-text').forEach(el => el.style.display = 'none');
+    } else {
+      sidebar.style.width = '220px';
+      document.querySelector('.page').style.marginLeft = '220px';
+      document.querySelectorAll('.menu-text, .brand-text').forEach(el => el.style.display = '');
+    }
+  });
+
+  // scroll to section function
+  function scrollToSection(sectionId) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  async function confirmDelete(id){
+    if(confirm('Delete '+id+'?')) {
+      const formData = new FormData();
+      formData.append('_method', 'DELETE'); // if needed, but since it's POST, maybe not
+
+      try {
+        const response = await fetch(`/delete_complaint/${id}`, {
+          method: 'POST',
+          body: formData
+        });
+        if (response.ok) {
+          alert('Complaint deleted successfully!');
+          location.reload();
+        } else {
+          alert('Failed to delete complaint.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred.');
+      }
+    }
+  }
+  </script>
+
+</body>
+</html>

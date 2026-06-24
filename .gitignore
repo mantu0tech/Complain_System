@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# Env
+project/.env
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Executables
+*.exe
+
+# VSCode
+.vscode/
+
+# Logs
+*.log
