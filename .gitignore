@@ -8,6 +8,10 @@ project/.env
 
 # Terraform
 .terraform/
+./terraform.tfstate
+./terraform/municipal/terraform.tfstate.backup
+./terraform/municipal/.terraform/
+./terraform/municipal/.terraform.lock.hcl
 *.tfstate
 *.tfstate.backup
 
