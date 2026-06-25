@@ -1,29 +1,26 @@
 version: "3.9"
 
 services:
-  db:
-    image: postgres:15
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: complaints_db
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
   web:
-    build: .
+    image: 051826716700.dkr.ecr.ap-south-1.amazonaws.com/complain-system:latest
+    container_name: complaint-system
     restart: always
     ports:
       - "5000:5000"
+
     env_file:
-      - .env
-    depends_on:
-      - db
+     - .env
+
     volumes:
       - ./static/uploads:/app/static/uploads
 
+    environment:
+      DB_HOST: municipal-postgres.cjqgwiy282it.ap-south-1.rds.amazonaws.com
+      DB_PORT: 5432
+      DB_NAME: complaints_db
+      DB_USER: postgres
+      DB_PASSWORD: Chula123!
+      FLASK_ENV: production
+
 volumes:
-  pgdata:
+  uploads:
