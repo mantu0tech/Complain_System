@@ -12,6 +12,7 @@ project/.env
 ./terraform/municipal/terraform.tfstate.backup
 ./terraform/municipal/.terraform/
 ./terraform/municipal/.terraform.lock.hcl
+./terraform/municipal/terraform.tfvars
 *.tfstate
 *.tfstate.backup
 
