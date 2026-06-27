@@ -21,7 +21,7 @@ spec:
       containers:
       - name: municipal-app
 
-        image: 519120506792.dkr.ecr.ap-south-1.amazonaws.com/finalimage
+        image: 051826716700.dkr.ecr.ap-south-1.amazonaws.com/complain-system
 
         imagePullPolicy: Always
 
