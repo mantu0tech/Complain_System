@@ -53,7 +53,7 @@ variable "ssh_allowed_cidrs" {
 # ── EKS ───────────────────────────────────────────────────────────────────────
 variable "eks_cluster_version" {
   type    = string
-  default = "1.31"
+  default = "1.35"
 }
 
 variable "admin_role_arns" {
