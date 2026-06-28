@@ -1,5 +1,9 @@
 # Municipal Complaint System — EKS Deployment Guide
 
+# Project ARCH
+**<img width="936" height="603" alt="image" src="https://github.com/user-attachments/assets/d0ef4ad4-6314-4054-b3fd-bed120b5f058" />
+**
+
 > **Repo:** https://github.com/mantu0tech/Complain_System.git
 
 A Flask-based citizen complaint portal with AI-powered priority prediction, deployed on AWS EKS using Terraform and Jenkins CI/CD.
